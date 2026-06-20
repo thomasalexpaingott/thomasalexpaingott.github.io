@@ -1,0 +1,334 @@
+/* ==========================================================
+   THRESHOLDS — design tokens
+   ========================================================== */
+:root {
+  --bg-base:        #15120F;
+  --bg-raised:       #211B16;
+  --text-primary:    #EDE3D3;
+  --text-muted:      #998C7C;
+  --accent-gold:     #C99A53;
+  --accent-gold-dim: rgba(201, 154, 83, 0.32);
+  --accent-rail:     #4A6567;
+  --hairline:        rgba(237, 227, 211, 0.10);
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body:    'Work Sans', -apple-system, sans-serif;
+  --font-mono:    'IBM Plex Mono', 'Courier New', monospace;
+
+  --gutter: clamp(48px, 8vw, 96px);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+
+a {
+  color: var(--accent-gold);
+  text-decoration: none;
+  border-bottom: 1px solid var(--accent-gold-dim);
+  transition: border-color 0.2s ease;
+}
+a:hover { border-color: var(--accent-gold); }
+
+:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 3px;
+}
+
+/* ==========================================================
+   HERO — the threshold cracks open
+   ========================================================== */
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 520px;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+}
+
+.hero-frame {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 42% 0 42%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hero-frame {
+    animation: open-threshold 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-frame { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes open-threshold {
+  to { clip-path: inset(0 0 0 0); }
+}
+
+.hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 60% center;
+}
+
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(21, 18, 15, 0.96) 0%,
+    rgba(21, 18, 15, 0.55) 38%,
+    rgba(21, 18, 15, 0.15) 65%,
+    rgba(21, 18, 15, 0.45) 100%
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 0 var(--gutter) 14vh;
+  max-width: 720px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin: 0 0 18px;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-style: italic;
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  line-height: 0.95;
+  margin: 0 0 20px;
+  color: var(--text-primary);
+}
+
+.hero-sub {
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  color: var(--text-primary);
+  opacity: 0.85;
+  max-width: 36ch;
+  margin: 0;
+}
+
+.scroll-cue {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+.scroll-cue span {
+  display: block;
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, var(--accent-gold), transparent);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-cue span { animation: pulse-line 2.4s ease-in-out infinite; }
+}
+@keyframes pulse-line {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+/* ==========================================================
+   JOURNEY — stops along the rail line
+   ========================================================== */
+.journey {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 10vh var(--gutter) 6vh;
+}
+
+.stop {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: clamp(24px, 4vw, 56px);
+  align-items: center;
+  padding: 7vh 0;
+  border-bottom: 1px solid var(--hairline);
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.stop:last-child { border-bottom: none; }
+.stop.in-view { opacity: 1; transform: translateY(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .stop { opacity: 1; transform: none; }
+}
+
+/* the rail line + marker, drawn per-row so it reads as one continuous line */
+.stop-rail {
+  align-self: stretch;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.stop-rail::before {
+  content: '';
+  position: absolute;
+  top: -7vh;
+  bottom: -7vh;
+  width: 1px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--accent-rail) 0,
+    var(--accent-rail) 6px,
+    transparent 6px,
+    transparent 14px
+  );
+}
+.stop:first-child .stop-rail::before { top: 0; }
+.stop:last-child .stop-rail::before { bottom: 50%; }
+
+.stop-marker {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--bg-base);
+  border: 2px solid var(--accent-gold);
+  z-index: 1;
+  margin-top: 6px;
+}
+
+.stop-media img {
+  width: 100%;
+  border-radius: 2px;
+  filter: saturate(0.96);
+}
+
+.stop-tag {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin: 0 0 16px;
+}
+
+.stop-quote {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  line-height: 1.35;
+  margin: 0 0 10px;
+}
+.stop-quote--empty {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 1.2rem;
+}
+.stop-quote-mark { font-size: 1rem; }
+
+.stop-hashtags {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.stop-poem {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.15rem, 1.8vw, 1.4rem);
+  line-height: 1.7;
+  color: var(--text-primary);
+  margin: 0;
+}
+.stop-poem--title {
+  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  line-height: 1.3;
+}
+
+/* alternate layout: media/text swap sides on reverse stops */
+.stop.reverse .stop-media { order: 3; }
+.stop.reverse .stop-text { order: 2; }
+.stop-media { order: 2; }
+.stop-text { order: 3; }
+
+/* ==========================================================
+   FOOTER — departure board
+   ========================================================== */
+.departures {
+  text-align: center;
+  padding: 14vh var(--gutter) 10vh;
+  border-top: 1px solid var(--hairline);
+}
+
+.departures-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent-gold);
+  margin: 0 0 14px;
+}
+
+.departures-line {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  margin: 0 0 36px;
+}
+
+.departures-links {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  margin-bottom: 28px;
+}
+.departures-links .dot {
+  color: var(--text-muted);
+  margin: 0 14px;
+  border: none;
+}
+
+.copyright {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* ==========================================================
+   RESPONSIVE — mobile
+   ========================================================== */
+@media (max-width: 760px) {
+  :root { --gutter: 24px; }
+
+  .hero-content { padding-bottom: 10vh; }
+  .hero-frame { clip-path: inset(0 18% 0 18%) !important; }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-frame { animation: open-threshold-mobile 2s cubic-bezier(0.16,1,0.3,1) 0.2s forwards; }
+  }
+  @keyframes open-threshold-mobile { to { clip-path: inset(0 0 0 0); } }
+
+  .stop {
+    grid-template-columns: 20px 1fr;
+    row-gap: 22px;
+  }
+  .stop-media, .stop-text { grid-column: 2; order: initial !important; }
+  .stop-rail { grid-row: 1 / span 2; }
+}
